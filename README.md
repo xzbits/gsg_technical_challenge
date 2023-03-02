@@ -63,8 +63,12 @@ python collect_data.py
 ```
 
 ## Step 4: Ingest data
+Please download the database which collects from Step 3 in 
+`https://drive.google.com/file/d/1ooGfZVzReCDDIlLMcyeosXoO3vkSuCo3/view?usp=sharing`
+
 For sample, I prepared 3 folders to simulate daily data ingestion `~/database/2022-2-27`, `~/database/2022-2-28`, and
 `~/database/2022-3-1`
+
 ```commandline
 python ingest_spark.py -d 2023-2-27 -p ~\gsg-casestudy\src\database\2022-02-27
 python ingest_spark.py -d 2023-2-28 -p ~\gsg-casestudy\src\database\2022-02-28
