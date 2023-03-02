@@ -70,9 +70,9 @@ For sample, I prepared 3 folders to simulate daily data ingestion `~/database/20
 `~/database/2022-3-1`
 
 ```commandline
-python ingest_spark.py -d 2023-2-27 -p ~\gsg-casestudy\src\database\2022-02-27
-python ingest_spark.py -d 2023-2-28 -p ~\gsg-casestudy\src\database\2022-02-28
-python ingest_spark.py -d 2023-3-1 -p ~\gsg-casestudy\src\database\2022-03-01
+python ingest_spark.py -d 2023-2-27 -p <DIR_PATH>\database\2022-02-27
+python ingest_spark.py -d 2023-2-28 -p <DIR_PATH>\database\2022-02-28
+python ingest_spark.py -d 2023-3-1 -p <DIR_PATH>\database\2022-03-01
 ```
 As result of above command lines, it will reflect in Hadoop HDFS 
 ![img.png](hadoop_hdfs_1.png)
