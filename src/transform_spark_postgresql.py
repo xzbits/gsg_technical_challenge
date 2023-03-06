@@ -66,5 +66,5 @@ def transformation(spark_obj):
 
 if __name__ == "__main__":
     jdbc_config = config_parser('prj-config.cfg', 'jdbc_jar')
-    spark = create_spark_session(jdbc_config)
-    transformation(spark)
+    sc = create_spark_session(jdbc_config)
+    transformation(sc)

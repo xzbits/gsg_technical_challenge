@@ -3,6 +3,7 @@ from config_parser import config_parser
 import os
 import pathlib
 import json
+import time
 
 
 def make_subdir(path, dir_name):
@@ -33,40 +34,51 @@ def search(page, url, per_page=100):
     return response.json()
 
 
-def bike(bike_id, url):
+def bike(bike_id, url, retries=3, waiting_time=2):
     """
     Get operations about bikes data
 
     :param bike_id: bike id number
     :param url: The operations about bikes data requested url
+    :param retries: Number of retries after failed response
+    :param waiting_time: The waiting time between each retry
     :return: The operations about bikes data
     """
-    response = requests.get(url.format(bike_id), verify=False)
 
-    return response.json()
+    count = 1
+    while count < retries:
+        response = requests.get(url.format(bike_id))
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            print("Current URL is not found, retry after {}s".format(waiting_time))
+            time.sleep(waiting_time)
+        count += 1
+    raise ValueError("Current URL did not response properly after {} retries! "
+                     "Please check. URL: {}".format(retries, url))
 
 
 def collect_data():
     dir_path = pathlib.Path().resolve()
     make_subdir(dir_path, "database")
-    bike_path = os.path.join(dir_path, "bike_data")
-
     url_dict = config_parser('prj-config.cfg', 'bike_url')
 
-    for i in range(1, 1000):
-        bikes_data = search(i, url_dict['bikes'])
-        if len(bikes_data['bikes']) == 0:
-            break
-
+    page = 1
+    bikes_data = search(page, url_dict['bikes'])
+    while len(bikes_data['bikes']) != 0:
         bikes_op_page = []
         for one_bike in bikes_data['bikes']:
             bike_op = bike(one_bike['id'], url_dict['op_bike'])
             bikes_op_page.append(bike_op['bike'])
 
         # Load bikes records
-        bikes_filename = os.path.join(bike_path, 'database', "bikes_op_page_{}.json".format(i))
+        bikes_filename = os.path.join(dir_path, 'database', "bikes_op_page_{}.json".format(page))
         with open(bikes_filename, "w", encoding="utf-8") as file:
             json.dump(bikes_op_page, file, ensure_ascii=False)
+
+        # Update next loop
+        page += 1
+        bikes_data = search(page, url_dict['bikes'])
 
 
 if __name__ == "__main__":

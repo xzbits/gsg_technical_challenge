@@ -100,7 +100,7 @@ def ingest_bikes_data(spark_obj, input_path, execution_date):
 
 
 if __name__ == "__main__":
-    spark_session = create_spark_session()
+    # Create interface to handle the command line arguments
     arg_parser = argparse.ArgumentParser(description="Ingest data")
     arg_parser.add_argument('-d', '--execution_day',
                             required=True,
@@ -113,4 +113,6 @@ if __name__ == "__main__":
     args = arg_parser.parse_args()
     execution_day = list(map(int, args.execution_day.split("-")))
     bikes_data_path = args.file_path
+
+    spark_session = create_spark_session()
     ingest_bikes_data(spark_session, bikes_data_path, execution_day)
