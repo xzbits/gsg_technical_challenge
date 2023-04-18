@@ -1,22 +1,14 @@
 # Project summary
 ## Introduction
-The project is ingesting daily bikes data from `https://bikeindex.org/` and storing these data in the Bigdata-friendly 
-format. In addition, provide a design to keep tracking all records' versions.
+The outlined project is a data engineering pipeline that involves collecting and processing data from the Bike Index API V3. The pipeline comprises several components that work together to extract, transform, and load data into either Hive or Postgresql.
 
-## Project structure
- 
-The project includes Project configuration `prj-config.cfg` to store all configurations for JDBC, Hadoop, Postgresql DB, 
-AWS, and Bike Index API V3. 
+The project starts with a configuration file, `prj-config.cfg`, which contains settings for JDBC, Hadoop, Postgresql DB, AWS, and the Bike Index API V3. The `collect_data.py` script is responsible for collecting data from the API and temporarily storing it in JSON files.
 
-`collect_data.py` collects data from `https://bikeindex.org/` and stores it temporary 
-in JSON files.
+The next component, `ingest_spark.py`, processes the JSON files using Spark and stores them in the Hadoop Distributed File System (HDFS) in the parquet file format. The data is then transformed using either the `transform_spark_hive.py` or `transform_spark_postgresql.py` script, depending on the target destination.
 
-`ingest_spark.py` ingests the JSON files and stores them in HDFS in parquet file format.
+The final component, `create_postgresql_db.py`, creates the GSG database and tables in Postgresql, which serves as the target for the transformed data.
 
-`transform_spark_hive.py` or `transform_spark_postgresql.py` transforming the parquet files in HDFS and storing 
-transformed data into Postgresql DB or Hive tables.
-
-`create_postgresql_db.py` creates GSG database and tables in Postgresql.
+Overall, this project is an efficient and automated data engineering pipeline that enables the collection, processing, and storage of large volumes of data from an external API.
 
 
 ## Data architecture
